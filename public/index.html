@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Viora</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Dobrodošao u Viora</h1>
+  <p>Popuni formu i pošalji svoje podatke:</p>
+
+  <form id="vioraForm" enctype="multipart/form-data">
+    <label for="email">Email:</label>
+    <input type="email" name="email" id="email" required />
+
+    <label for="facebook">Facebook:</label>
+    <input type="text" name="facebook" id="facebook" />
+
+    <label for="instagram">Instagram:</label>
+    <input type="text" name="instagram" id="instagram" />
+
+    <label for="linkedin">LinkedIn:</label>
+    <input type="text" name="linkedin" id="linkedin" />
+
+    <label for="twitter">Twitter:</label>
+    <input type="text" name="twitter" id="twitter" />
+
+    <label for="files">Upload chatova ili datoteka:</label>
+    <input type="file" name="files" id="files" multiple />
+
+    <button type="submit">Pošalji</button>
+  </form>
+
+  <div id="message" style="margin-top: 20px; font-weight: bold;"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
