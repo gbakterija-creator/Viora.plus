@@ -1,16 +1,42 @@
 <!DOCTYPE html>
 <html lang="hr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Viora</title>
-  <!-- Redirect onrender.com to main domain -->
-  <meta http-equiv="refresh" content="0; url=https://viora.plus" />
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viora Upitnik</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Dobrodošao u Viora</h1>
-  <p>Ovdje će uskoro biti tvoj prvi sajt!</p>
+  <h1>Viora Upitnik</h1>
+  <form id="vioraForm">
+    <!-- Step 1: Email -->
+    <div class="step" id="step1">
+      <label>Email:</label>
+      <input type="email" name="email" required>
+      <button type="button" onclick="nextStep(2)">Dalje</button>
+    </div>
+
+    <!-- Step 2: Social Links -->
+    <div class="step" id="step2" style="display:none">
+      <label>Facebook:</label>
+      <input type="text" name="facebook">
+      <label>Instagram:</label>
+      <input type="text" name="instagram">
+      <label>LinkedIn:</label>
+      <input type="text" name="linkedin">
+      <label>Twitter:</label>
+      <input type="text" name="twitter">
+      <button type="button" onclick="nextStep(3)">Dalje</button>
+    </div>
+
+    <!-- Step 3: Upload Chat Files -->
+    <div class="step" id="step3" style="display:none">
+      <label>Upload chat fajlova:</label>
+      <input type="file" name="chats" multiple>
+      <button type="submit">Pošalji</button>
+    </div>
+  </form>
+
   <script src="script.js"></script>
 </body>
 </html>
