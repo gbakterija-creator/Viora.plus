@@ -1,19 +1,21 @@
 // server.js
 const express = require("express");
 const multer = require("multer");
-const nodemailer = require("nodemailer");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
+const sgMail = require("@sendgrid/mail");
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000; // Render daje port ovdje
 
-// Setup folder za upload
+// SendGrid API key
+sgMail.setApiKey("TVOJ_SENDGRID_API_KEY"); // <- zamijeni sa stvarnim API key
+
+// Folder za upload
 const uploadFolder = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadFolder)) fs.mkdirSync(uploadFolder);
 
-// Multer konfiguracija
 const upload = multer({ dest: uploadFolder });
 
 // Middlewares
@@ -22,41 +24,33 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Nodemailer konfiguracija
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "g.bakterija@gmail.com",          // tvoj Gmail
-    pass: "shum gdgx fxlu awza"            // tvoj App password
-  }
-});
-
 // Endpoint za formu
-app.post("/submit", upload.array("files"), (req, res) => {
+app.post("/submit", upload.array("files"), async (req, res) => {
   const { email, facebook, instagram, linkedin, twitter } = req.body;
 
   const attachments = (req.files || []).map(f => ({
+    content: fs.readFileSync(f.path).toString("base64"),
     filename: f.originalname,
-    path: f.path
+    type: f.mimetype,
+    disposition: "attachment"
   }));
 
-  transporter.sendMail({
-    from: "g.bakterija@gmail.com",
+  const msg = {
     to: "g.bakterija@gmail.com",
+    from: "g.bakterija@gmail.com",
     subject: "Novi upit s Viora forme",
     text: `Email: ${email}\nFacebook: ${facebook}\nInstagram: ${instagram}\nLinkedIn: ${linkedin}\nTwitter: ${twitter}`,
     attachments
-  }, (err, info) => {
-    if (err) {
-      console.error("Greška pri slanju emaila:", err);
-      return res.status(500).send("Greška pri slanju emaila.");
-    }
-    console.log("Email poslan:", info.response);
+  };
+
+  try {
+    await sgMail.send(msg);
     res.send("Podaci uspješno poslani!");
-  });
+  } catch (err) {
+    console.error("Greška pri slanju maila:", err);
+    res.status(500).send("Greška pri slanju emaila.");
+  }
 });
 
 // Pokreni server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
